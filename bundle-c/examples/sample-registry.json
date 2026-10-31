@@ -1,0 +1,27 @@
+{
+  "_note": "SAMPLE registry for dry runs and tests. All keys are fake.",
+  "peers": [
+    {
+      "name": "site-wg-1",
+      "public_key": "RkFLRS1zaXRlLXdnLTEta2V5LXRlc3RzLW9ubHkuLi4=",
+      "tunnel_ip": "10.100.0.2",
+      "status": "active",
+      "added": "2026-10-05"
+    },
+    {
+      "name": "site-wg-2",
+      "public_key": "RkFLRS1zaXRlLXdnLTIta2V5LXRlc3RzLW9ubHkuLi4=",
+      "tunnel_ip": "10.100.0.3",
+      "status": "active",
+      "added": "2026-10-05"
+    },
+    {
+      "name": "old-site",
+      "public_key": "RkFLRS1yZXZva2VkLWtleS10ZXN0cy1vbmx5Li4uLi4=",
+      "tunnel_ip": "10.100.0.4",
+      "status": "revoked",
+      "revoked_at": "2026-10-05T15:00:00+00:00",
+      "released": false
+    }
+  ]
+}
