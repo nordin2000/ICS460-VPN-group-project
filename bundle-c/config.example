@@ -1,14 +1,12 @@
-# Bundle C config. Copy to config.env and fill in real values from Bundles A and B.
-# Secrets (NETBIRD_API_TOKEN, NETBIRD_SETUP_KEY) are NEVER put in this file:
-# set them as environment variables. The scripts refuse to run if they appear here.
-# Example values below are for C's local Docker test setup only.
+# Report 1 sample settings for scripts/ dry runs.
+# The Docker lab does not use this file.
+# Real API tokens belong in environment variables.
 
-# --- From Bundle A (practice network) ---
 MUSEUM_SERVER_IP=172.30.0.10
 MUSEUM_VPN_ENDPOINT=wg-hub
 SITE_EXEC=docker:site-wg-1
 
-# --- Plain WireGuard baseline (Bundle C) ---
+# WireGuard example
 WG_INTERFACE=wg0
 WG_PORT=51820
 WG_SUBNET=10.100.0.0/24
@@ -16,9 +14,9 @@ HUB_TUNNEL_IP=10.100.0.1
 HUB_CONF=/etc/wireguard/wg0.conf
 WG_REGISTRY=registry.json
 
-# --- NetBird (Bundle C; groups and identity from Bundle B) ---
+# NetBird example; these are not confirmed team settings
 NETBIRD_MANAGEMENT_URL=https://api.netbird.io:443
 NETBIRD_API_URL=https://api.netbird.io
 NETBIRD_GROUP=prov-sites
-# builtin = NetBird's own login, entra = Microsoft Entra ID (Bundle B decides)
+# Placeholder login choice
 IDENTITY_PATH=builtin

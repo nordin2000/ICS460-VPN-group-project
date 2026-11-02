@@ -1,16 +1,5 @@
 #!/usr/bin/env python3
-"""Revoke a remote site's access in the plain WireGuard baseline.
-
-Removes the peer from the running hub first (fastest revocation), then from
-the config file so it cannot come back after a restart. Logs T0 (change
-applied) so Bundle D can measure how quickly access really disappears.
-Status: --dry-run works; real changes are not built yet.
-
-Example:
-  python scripts/wg_remove.py --config config.example --name site-wg-1 \
-      --registry examples/sample-registry.json \
-      --hub-conf examples/sample-hub-wg0.conf --dry-run
-"""
+"""Print the planned steps for removing a WireGuard site. Dry-run only."""
 
 import argparse
 import sys

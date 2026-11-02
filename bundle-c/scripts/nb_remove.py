@@ -1,20 +1,5 @@
 #!/usr/bin/env python3
-"""Remove access in NetBird, by one of four explicit modes.
-
-  peer         delete one device             (sites enrolled with a setup key)
-  block-user   block the person's account    (fast removal of a person)
-  delete-user  delete the person from NetBird (permanent offboarding)
-  group        drop one device from one group (removes one level of access;
-               this edits Bundle B's groups, so B should agree)
-
-Disabling a user in Entra ID is Bundle B's action and is not done here.
-Logs T0 (change applied) so Bundle D can measure revocation time.
-Status: --dry-run works; real changes are not built yet.
-
-Example:
-  python scripts/nb_remove.py --config config.example --mode peer \
-      --name site-nb-1 --dry-run
-"""
+"""Print a NetBird removal plan. Dry-run only. Does not change the identity provider."""
 
 import argparse
 import sys

@@ -1,18 +1,5 @@
 #!/usr/bin/env python3
-"""Give a site or a user access through NetBird (the "after" system).
-
-Two modes:
-  site  enroll a headless site with a one-off setup key (fully scriptable)
-  user  prepare a person's account; they still log in themselves (SSO is
-        interactive by design)
-Status: --dry-run works; real changes are not built yet.
-
-Examples:
-  python scripts/nb_add.py --config config.example site --name site-nb-1 \
-      --site docker:site-nb-1 --dry-run
-  python scripts/nb_add.py --config config.example --group prov-staff user \
-      --email staff1@example.org --dry-run
-"""
+"""Print a NetBird site-enrollment or user-setup plan. Dry-run only."""
 
 import argparse
 import json
@@ -92,7 +79,10 @@ def main() -> int:
             print("error: real changes are not built yet; rerun with --dry-run",
                   file=sys.stderr)
             return lib.EXIT_FAILED
-        plan_site(cfg, args) if args.mode == "site" else plan_user(cfg, args)
+        if args.mode == "site":
+            plan_site(cfg, args)
+        else:
+            plan_user(cfg, args)
     except (ValueError, KeyError, OSError) as e:
         print(f"error: {e}", file=sys.stderr)
         return lib.EXIT_INPUT

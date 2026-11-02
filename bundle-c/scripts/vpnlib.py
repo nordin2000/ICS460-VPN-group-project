@@ -1,19 +1,4 @@
-"""Shared helpers for Bundle C's VPN add/remove scripts.
-
-Status (Progress Report 1):
-  * Implemented and unit-tested: the pure helpers in this file (config
-    loading, name checks, tunnel IP allocation, editing the hub's
-    WireGuard config text, building NetBird API request bodies).
-  * NOT built yet: anything that touches a real system (running `wg`,
-    calling the NetBird API, running commands on a site). Those functions
-    raise NotImplementedError. The entry-point scripts only work in
-    --dry-run mode for now.
-
-Command and API details follow the official docs:
-  https://git.zx2c4.com/wireguard-tools/about/src/man/wg.8
-  https://git.zx2c4.com/wireguard-tools/about/src/man/wg-quick.8
-  https://docs.netbird.io/api
-"""
+"""Helpers for the Report 1 starter scripts. Real command/API execution is not implemented."""
 
 from __future__ import annotations
 
@@ -42,9 +27,7 @@ def now_iso() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
 
 
-# --------------------------------------------------------------------------
 # Config
-# --------------------------------------------------------------------------
 
 def load_config(path: str | Path) -> dict[str, str]:
     """Read KEY=VALUE lines from a config file; environment variables win.
@@ -100,12 +83,10 @@ def parse_site_exec(value: str) -> tuple[str, str | None]:
 
 def run_on_site(site_exec: str, command: list[str]) -> str:
     """Run a command on a site and return its output. Not built yet."""
-    raise NotImplementedError("running commands on sites is a Week 2 task")
+    raise NotImplementedError("running commands on sites is not implemented")
 
 
-# --------------------------------------------------------------------------
 # WireGuard registry (WireGuard has no names, so the scripts keep their own)
-# --------------------------------------------------------------------------
 
 def load_registry(path: str | Path) -> dict:
     p = Path(path)
@@ -146,9 +127,7 @@ def next_free_ip(subnet: str, hub_ip: str, registry: dict) -> str:
     raise RuntimeError(f"no free addresses left in {subnet}")
 
 
-# --------------------------------------------------------------------------
 # Hub config editing (pure text functions, so they can be unit-tested)
-# --------------------------------------------------------------------------
 
 _KEY_LINE = re.compile(r"^\s*PublicKey\s*=\s*(\S+)\s*$", re.MULTILINE)
 
@@ -165,13 +144,13 @@ def _split_sections(conf_text: str) -> list[str]:
 
 def peers_in_conf(conf_text: str) -> list[str]:
     """Public keys of every [Peer] section."""
-    return [
-        m.group(1)
-        for section in _split_sections(conf_text)
-        if section.lstrip().startswith("[Peer]")
-        for m in [_KEY_LINE.search(section)]
-        if m
-    ]
+    keys = []
+    for section in _split_sections(conf_text):
+        if section.lstrip().startswith("[Peer]"):
+            match = _KEY_LINE.search(section)
+            if match:
+                keys.append(match.group(1))
+    return keys
 
 
 def add_peer_block(conf_text: str, name: str, public_key: str, tunnel_ip: str) -> str:
@@ -219,9 +198,7 @@ def render_site_conf(tunnel_ip: str, hub_public_key: str, endpoint: str,
     return "\n".join(lines) + "\n"
 
 
-# --------------------------------------------------------------------------
 # NetBird helpers (pure; they build request bodies the API docs describe)
-# --------------------------------------------------------------------------
 
 def pick_exactly_one(items: list[dict], what: str) -> dict:
     """Never guess: stop if there are zero or several matches."""
@@ -265,23 +242,11 @@ def user_update_body(user: dict, blocked: bool) -> dict:
 
 
 class NetBirdAPI:
-    """Thin client for the NetBird REST API (header: 'Authorization: Token ...').
-
-    Not built yet. Planned calls, all from https://docs.netbird.io/api :
-      GET    /api/groups?name=<name>        resolve NETBIRD_GROUP to its ID
-      POST   /api/setup-keys                create a one-off enrollment key
-      PUT    /api/setup-keys/{id}           revoke an unused key
-      GET    /api/peers?name=<name>         find a peer by name
-      DELETE /api/peers/{id}                remove a device
-      GET    /api/users                     find a user (filtered by email locally)
-      PUT    /api/users/{id}                block / unblock, set default groups
-      DELETE /api/users/{id}                remove a user from NetBird
-      PUT    /api/groups/{id}               replace a group's member list
-    """
+    """Placeholder NetBird client; request() is not implemented."""
 
     def __init__(self, base_url: str, token: str):
         self.base_url = base_url.rstrip("/")
         self.token = token
 
     def request(self, method: str, path: str, body: dict | None = None):
-        raise NotImplementedError("NetBird API calls are a Week 3 task")
+        raise NotImplementedError("NetBird API calls are not implemented")

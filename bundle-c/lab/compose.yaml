@@ -1,0 +1,62 @@
+name: ics460c
+
+services:
+  # Simple test webpage on the museum network.
+  museum:
+    build: .
+    image: ics460c-lab:local
+    container_name: ics460c-museum
+    command: python3 -m http.server 8080 --directory /srv/museum
+    volumes:
+      - ./web:/srv/museum:ro
+    networks:
+      private:
+        ipv4_address: 172.30.0.10
+
+  # VPN gateway connects the client network to the museum network.
+  hub:
+    build: .
+    image: ics460c-lab:local
+    container_name: ics460c-hub
+    command: node-start hub
+    cap_add:
+      - NET_ADMIN  # Lets this container set up its VPN interface.
+    sysctls:
+      net.ipv4.ip_forward: "1"
+    volumes:
+      - hub-state:/etc/wireguard
+    networks:
+      outer:
+        ipv4_address: 172.29.0.2
+      private:
+        ipv4_address: 172.30.0.2
+
+  # Remote computer. It is not on the museum network.
+  client:
+    build: .
+    image: ics460c-lab:local
+    container_name: ics460c-client
+    command: node-start client
+    cap_add:
+      - NET_ADMIN  # Lets this container set up its VPN interface.
+    volumes:
+      - client-state:/etc/wireguard
+    networks:
+      outer:
+        ipv4_address: 172.29.0.3
+# Two separate networks; only the hub joins both.
+networks:
+  outer:
+    internal: true
+    ipam:
+      config:
+        - subnet: 172.29.0.0/24
+  private:
+    internal: true
+    ipam:
+      config:
+        - subnet: 172.30.0.0/24
+# Keep keys and configs when containers are stopped.
+volumes:
+  hub-state:
+  client-state:

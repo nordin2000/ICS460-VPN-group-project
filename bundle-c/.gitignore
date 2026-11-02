@@ -4,3 +4,4 @@ __pycache__/
 config.env
 registry.json
 *.key
+.env

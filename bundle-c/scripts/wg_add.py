@@ -1,13 +1,5 @@
 #!/usr/bin/env python3
-"""Add a remote site to the plain WireGuard baseline (the "before" system).
-
-Lowest-priority script: the group plan allows dropping it if time runs short.
-Status: --dry-run works; real changes are not built yet.
-
-Example:
-  python scripts/wg_add.py --config config.example --name site-wg-3 \
-      --site docker:site-wg-3 --registry examples/sample-registry.json --dry-run
-"""
+"""Print the planned steps for adding a WireGuard site. Dry-run only."""
 
 import argparse
 import sys
