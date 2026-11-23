@@ -1,0 +1,35 @@
+{
+  "project": "Museum VPN",
+  "platform": "NetBird Cloud",
+  "api_base_url": "https://api.netbird.io/api",
+  "groups":{
+    "staff": {
+      "name": "Staff",
+      "peer_group_id": "dbhu69qfadhs7391cto0",
+      "description": "Museum staff members may access all resources"
+    },
+    "volunteers": {
+      "name": "Volunteers",
+      "peer_group_id": "dbhu69qfadhs7391ctp0",
+      "description": "Museum volunteers have restricted access to resources"
+    }
+  },
+  "default_dashboard_role": "user",
+  "policies_documentation": [
+    {
+      "name": "Staff Full Access",
+      "source_group": "Staff",
+      "destination": "All",
+      "protocol": "ALL",
+      "ports": "ALL"
+    },
+    {
+      "name": "Volunteer Web Access",
+      "source_group": "Volunteers",
+      "destination": "All",
+      "protocol": "TCP",
+      "ports": "80, 443"
+    }
+  ]
+
+}

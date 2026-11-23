@@ -1,0 +1,47 @@
+# docker-compose.yml
+# This file tells Docker which containers to start and how to connect them.
+# Start everything with:  docker compose up -d
+# Stop everything with:   docker compose down
+
+services:
+
+  # The museum server - runs a web server (nginx) that shows our web page
+  museum-server:
+    image: nginx:alpine              # nginx web server on a small Linux (Alpine)
+    container_name: museum-server
+    volumes:
+      - ./web:/usr/share/nginx/html  # show the files from our "web" folder
+    networks:
+      museum-net:
+        ipv4_address: 172.28.0.10    # fixed address so the sites know where to find it
+
+  # Remote museum locations - small Linux machines that try to reach the server
+  site-north:
+    image: alpine
+    container_name: site-north
+    command: sleep infinity          # keeps the container running so we can use it
+    networks:
+      - internet-net
+
+  site-east:
+    image: alpine
+    container_name: site-east
+    command: sleep infinity
+    networks:
+      - internet-net
+
+  site-west:
+    image: alpine
+    container_name: site-west
+    command: sleep infinity
+    networks:
+      - internet-net
+
+# Two separate networks. Containers on different networks can't talk to each other.
+# This is why the remote sites can't reach the museum server without a VPN.
+networks:
+  museum-net:                        # the museum's private network
+    ipam:
+      config:
+        - subnet: 172.28.0.0/24
+  internet-net:                      # the "internet" the remote sites are on
