@@ -8,7 +8,8 @@ This python program supports user management and monitoring users using NetBird 
 How to Run:
 1. Open the terminal and go into Bundle-B directory
 2. Run python user_management.py
-3. Enter private API token when prompted.
+3. Enter private API token when prompted. 
+(nbp_3HovIbgnEmgs6hWbNRgwT2uYkYA1rn1LQkX5)
 4. Select an option from menu.
 5. Exit.
 
@@ -48,7 +49,7 @@ Target Server Requirement: Whichever machine hosts the test web server (`python 
 
 **3. Steps to Test:**
 
- 1) On the machine assigned to ’Museum-Server’ group (ex: ‘Kanagxx’ at ‘100.89.153.83’ or  ‘RoseN’ at ‘100.89.68.104’), open powershell and start a HTTP server on port 80:
+ 1) On the machine assigned to ’Museum-Server’ group (ex: ‘Kanagxx’ at ‘100.89.153.83’ or  ‘RoseN’ at ‘100.89.68.104’), open powershell, go in the museum-server directory (tunnel-vision) and start a HTTP server on port 80:
     
         python -m http.server 80
 
