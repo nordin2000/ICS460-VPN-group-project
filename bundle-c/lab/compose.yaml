@@ -1,17 +1,15 @@
 name: ics460c
 
 services:
-  # Simple test webpage on the museum network.
+  # Museum server and webpage from Rose's Bundle A (65c8ade).
   museum:
-    build: .
-    image: ics460c-lab:local
+    image: nginx:alpine
     container_name: ics460c-museum
-    command: python3 -m http.server 8080 --directory /srv/museum
     volumes:
-      - ./web:/srv/museum:ro
+      - ./web:/usr/share/nginx/html:ro
     networks:
       private:
-        ipv4_address: 172.30.0.10
+        ipv4_address: 172.28.0.10
 
   # VPN gateway connects the client network to the museum network.
   hub:
@@ -29,21 +27,48 @@ services:
       outer:
         ipv4_address: 172.29.0.2
       private:
-        ipv4_address: 172.30.0.2
+        ipv4_address: 172.28.0.2
 
-  # Remote computer. It is not on the museum network.
-  client:
+  # Remote sites have separate keys and only join the outer network.
+  north:
     build: .
     image: ics460c-lab:local
-    container_name: ics460c-client
+    container_name: ics460c-north
     command: node-start client
     cap_add:
-      - NET_ADMIN  # Lets this container set up its VPN interface.
+      - NET_ADMIN
     volumes:
       - client-state:/etc/wireguard
     networks:
       outer:
         ipv4_address: 172.29.0.3
+
+  east:
+    build: .
+    image: ics460c-lab:local
+    container_name: ics460c-east
+    command: node-start client
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - east-state:/etc/wireguard
+    networks:
+      outer:
+        ipv4_address: 172.29.0.4
+
+  west:
+    build: .
+    image: ics460c-lab:local
+    container_name: ics460c-west
+    command: node-start client
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - west-state:/etc/wireguard
+    networks:
+      outer:
+        ipv4_address: 172.29.0.5
+
 # Two separate networks; only the hub joins both.
 networks:
   outer:
@@ -55,8 +80,10 @@ networks:
     internal: true
     ipam:
       config:
-        - subnet: 172.30.0.0/24
+        - subnet: 172.28.0.0/24
 # Keep keys and configs when containers are stopped.
 volumes:
   hub-state:
   client-state:
+  east-state:
+  west-state:

@@ -1,0 +1,3 @@
+setup,samples,successes,failures,median_ms,min_ms,max_ms
+wireguard,30,30,0,1.178,0.455,4.64
+netbird,30,30,0,413.9815,408.77000000000004,823.08

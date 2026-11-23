@@ -1,0 +1,167 @@
+[
+  {
+    "test": "Python removal tests",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "test": "Compose lab/compose.yaml",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "test": "Compose netbird/compose.yaml",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "test": "Shell syntax",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "test": "Fresh east restoration retry",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "test": "Concurrent removal 1",
+    "passed": true,
+    "detail": "3 east denials; 0 control failures"
+  },
+  {
+    "test": "Repeat removal 1",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "test": "Restore east 1",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "test": "Concurrent removal 2",
+    "passed": true,
+    "detail": "3 east denials; 0 control failures"
+  },
+  {
+    "test": "Repeat removal 2",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "test": "Restore east 2",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "test": "Concurrent removal 3",
+    "passed": true,
+    "detail": "3 east denials; 0 control failures"
+  },
+  {
+    "test": "Repeat removal 3",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "test": "Restore east 3",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "test": "Concurrent removal 4",
+    "passed": true,
+    "detail": "3 east denials; 0 control failures"
+  },
+  {
+    "test": "Repeat removal 4",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "test": "Restore east 4",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "test": "Concurrent removal 5",
+    "passed": true,
+    "detail": "3 east denials; 0 control failures"
+  },
+  {
+    "test": "Repeat removal 5",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "test": "Restore east 5",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "test": "Reload recovery 1",
+    "passed": true,
+    "detail": "{'north': True, 'west': True}"
+  },
+  {
+    "test": "Reload recovery 2",
+    "passed": true,
+    "detail": "{'north': True, 'west': True}"
+  },
+  {
+    "test": "Reload recovery 3",
+    "passed": true,
+    "detail": "{'north': True, 'west': True}"
+  },
+  {
+    "test": "Fresh lab final health",
+    "passed": true,
+    "detail": "{'north': True, 'east': True, 'west': True, 'hub': True}"
+  },
+  {
+    "test": "HTTP wireguard batch 1",
+    "passed": true,
+    "detail": "10 samples"
+  },
+  {
+    "test": "HTTP wireguard batch 2",
+    "passed": true,
+    "detail": "10 samples"
+  },
+  {
+    "test": "HTTP wireguard batch 3",
+    "passed": true,
+    "detail": "10 samples"
+  },
+  {
+    "test": "HTTP netbird batch 1",
+    "passed": true,
+    "detail": "10 samples"
+  },
+  {
+    "test": "HTTP netbird batch 2",
+    "passed": true,
+    "detail": "10 samples"
+  },
+  {
+    "test": "HTTP netbird batch 3",
+    "passed": true,
+    "detail": "10 samples"
+  },
+  {
+    "test": "Original wireguard final health",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "test": "Original netbird final health",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "test": "Source files unchanged",
+    "passed": true,
+    "detail": ""
+  }
+]

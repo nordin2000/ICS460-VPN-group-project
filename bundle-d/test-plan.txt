@@ -1,0 +1,44 @@
+Museum VPN test plan - November 23, 2026
+
+Setup
+One Mac running Docker Desktop. WireGuard: museum, hub, north/east/west.
+NetBird: museum peer and client on separate outbound Docker networks.
+Use the same museum page and keep a server-health control during denial checks.
+
+Fresh WireGuard setup
+Use a separate project, container names, unused subnets and fresh key volumes.
+Check: hub loads page; north fails before VPN; all sites work after connect.sh;
+removing east blocks only east; repeat removal works; reconnect restores east.
+Save commands, output and any setup issues.
+
+Concurrent removal (five trials)
+Run fresh HTTP requests from north/east/west and hub in parallel. Remove east.
+Pass: east loses access while all control requests succeed. Repeat removal,
+restore east and verify baseline access before the next trial.
+Use one controller clock; record action start/end and request start/end/exit.
+Requests have a 1-second timeout and a 0.25-second pause after completion.
+Report first observed failure and the timeout/probe resolution.
+
+Hub reload (three trials)
+Keep east removed. Reload hub wg 0 while probing all sites and hub health.
+Pass: east stays removed in live/saved settings and north/west recover.
+Collect for 35 seconds after reload. Record first successes and failed requests.
+
+NetBird access
+Staff: museum 80/8080 succeed. Volunteers:80 succeeds,8080 fails.
+No role: both fail. Verify the service stays healthy. Restore Staff afterward.
+Enroll a fresh client using empty state and verify its assigned role and access.
+Delete only the approved disposable peer after a successful baseline.
+Pass: deleted device loses access; original client/server work; re-enrollment
+and restoring Staff restore access. Use 3-second wget probes and a 0.5-second pause.
+
+HTTP timings
+Use curl 8.12.1, one warm-up per batch, three batches of ten per VPN.
+Save every status, duration and exit code. Timeout:5 seconds.
+Record NetBird connection type before/after each batch. Report median, range,
+sample count and failures. Save old trials under their original names.
+
+Handoff
+Save CSVs and command output. Build tables/graph from the recorded samples.
+Separate tested site counts from scaling analysis. List remaining test scope
+in the results report. Keep original screenshots/logs in local private storage.

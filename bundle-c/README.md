@@ -1,37 +1,91 @@
-# Bundle C
+# Bundle C: museum VPN
 
-This is our local WireGuard test setup. It runs three Docker containers: a museum test webpage, a VPN hub, and a remote client.
+This runs the museum page through WireGuard and NetBird on one laptop.
+Rose supplied the museum page/server design (Bundle A, commit 65c8ade).
+Kanag set up the team NetBird groups and policies (Bundle B).
+Suraz built the VPN connection/removal scripts and local integration.
 
-Open Docker Desktop, then run these from the bundle-c folder:
+- `lab/`: WireGuard hub, museum server and north/east/west sites.
+- `netbird/`: NetBird museum peer and client.
+- [Bundle D](../bundle-d/README.md): tests, measurements and results.
+
+## WireGuard
+
+Start Docker Desktop. From `bundle-c/lab`:
 
 ```sh
-cd lab
-docker compose up --build -d
+docker compose up --build -d --remove-orphans
 sh connect.sh
 ```
 
-Try opening the museum page from the client:
+Each site has its own key and address. Test all three:
 
 ```sh
-docker compose exec client curl --max-time 5 http://172.30.0.10:8080/
+docker compose exec north curl --noproxy '*' --max-time 5 http://172.28.0.10/
+docker compose exec east curl --noproxy '*' --max-time 5 http://172.28.0.10/
+docker compose exec west curl --noproxy '*' --max-time 5 http://172.28.0.10/
 ```
 
-It should print the webpage. To remove the client's access:
+All three should print the museum page. Remove east, then repeat the requests:
 
 ```sh
-python3 remove.py
+python3 remove.py east
 ```
 
-Run the same curl command again. It should time out. The museum server is still running, but the client can no longer reach it.
-
-We tested that access fails before the VPN connects, works after connecting, and stops after removal. We also reloaded the hub's WireGuard settings and confirmed the client stayed blocked. Running removal again correctly says it is already removed. These checks passed on November 2. The 19 original helper tests also pass.
-
-To stop the lab:
+East should time out. North and west should still work. Bring east back:
 
 ```sh
-docker compose down
+sh connect.sh east
 ```
 
-Docker keeps the keys in local volumes. Restart the containers before repeating the full test. If connect.sh stops halfway, check the error before trying again.
+Reconnecting may take a few seconds for a new handshake. To check saved removal,
+remove east, reload the hub, and repeat the requests:
 
-The files in scripts/ are the older dry-run starters. config.example is only sample input for those scripts; the lab does not use it. The working lab uses connect.sh and remove.py inside lab/. NetBird, the shared museum network, performance tests, and tests with more sites are still next steps.
+```sh
+docker compose exec hub wg-quick down wg0
+docker compose exec hub wg-quick up wg0
+docker compose exec hub wg show
+```
+
+In our tests, north/west recovered about 15-16 seconds after reload; east stayed
+removed. Repeating `python3 remove.py east` reports it is already removed.
+
+Stop with `docker compose down`. Keys/configs stay in named volumes. Each startup
+leaves the VPN off until `connect.sh` runs. For the before-VPN check, run a site
+request before connecting and check that the hub can still load the page.
+
+## NetBird
+
+Use the team workspace. From `bundle-c/netbird`:
+
+```sh
+docker volume create ics460-netbird-check
+docker compose up -d
+docker compose exec server netbird up --disable-dns
+docker compose exec client netbird up --disable-dns
+```
+
+The server volume reuses our original test enrollment when present. Keep the old
+`ics460-netbird-check` container stopped while this stack runs.
+
+Follow the login links and approve devices if prompted. Put the server in
+Museum-Server and the client in Staff. Remove inherited Museum-Server membership
+from the client. The existing team rules allow Staff all traffic to Museum-Server
+and Volunteers TCP80; the default allow-all rule is disabled.
+
+Find the server IP with `docker compose exec server netbird status`.
+Replace SERVER_IP in these requests:
+
+```sh
+docker compose exec client wget -T 5 -qO- http://SERVER_IP/
+docker compose exec client wget -T 5 -qO- http://SERVER_IP:8080/
+```
+
+Staff should reach both. Volunteers should reach only 80. A client with neither
+role should reach neither. Check server health separately:
+
+```sh
+docker compose exec museum wget -T 5 -qO- http://127.0.0.1:8080/
+```
+
+Restore Staff after role testing. Stop with `docker compose down` from `netbird/`.

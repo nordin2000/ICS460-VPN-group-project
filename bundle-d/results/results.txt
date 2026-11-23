@@ -1,0 +1,78 @@
+Museum VPN results - November 23, 2026
+
+Setup
+Both VPN labs ran on one Mac with Docker Desktop. WireGuard used three remote
+sites and a hub forwarding to nginx at 172.28.0.10:80. NetBird used separate
+client/server Docker networks and served the same page on 80/8080. The server's
+VPN IP was 100.89.247.26. NetBird client/agent version:0.83.2.
+
+WireGuard
+- Fresh setup passed: hub health, north denied before VPN, all three sites
+  connected with separate keys, selective removal, repeat removal and restoration.
+- Five concurrent east-removal trials passed. All 252 north/west/hub control
+  probes succeeded. Repeat removal and restoration passed five times each.
+- Three hub reloads kept east revoked. North/west first succeeded 15.419-16.434 s
+  after reload ended. Each site had 34 failed probes across the reload windows;
+  the hub's museum-health requests had zero failures.
+- First completed post-command east denials were observed 1.153-1.264 s after
+  removal command completion. Requests used a 1 s timeout. This measures when
+  denial was observed, including timeout/dispatch overhead.
+
+NetBird
+- Staff reached 80/8080. Volunteers reached 80 and timed out on 8080 while the
+  local 8080 service check worked. With no role, both requests failed and the
+  local server stayed healthy. Restoring Staff restored access.
+- A new client with empty state enrolled through SSO. Its inherited
+  Museum-Server membership was changed to Staff;80/8080 both worked.
+- Deleted only the disposable fresh peer. All 14 post-confirmation requests
+  failed (7 per port). Original-client requests succeeded 26/26; local server
+  checks succeeded 46/46. The deleted client reported SessionExpired.
+- Re-enrolled through SSO. It received 100.89.230.230 in place of 100.89.230.25.
+  Restored Staff and verified 80/8080 plus original-client/server health.
+  Final checks followed a session interruption, so immediate recovery time
+  was not measured.
+
+HTTP response times
+Setup       Requests  Success  Median(ms)  Minimum(ms)  Maximum(ms)
+WireGuard   30        30       1.178       0.455        4.640
+NetBird     30        30       413.982     408.770      823.080
+
+Method: curl 8.12.1; three batches of ten fresh requests per VPN, one warm-up
+per batch;5 s timeout. A helper shared each client's network namespace. Curl's
+total time excludes helper startup. The original 20 samples are in data/initial-http.csv;
+the later 60 are in data/evaluation/http-trials.csv.
+
+All six NetBird status checks around the batches showed the museum peer Relayed
+via streamline-us-sjo 1-0:443. WireGuard stayed local. The large response-time
+difference includes the different network paths.
+
+What we learned
+Selective peer removal kept the other sites working. Full hub reload briefly
+interrupted traffic, then it recovered automatically. Deleting a NetBird device
+revoked its access; a new login and role assignment restored it.
+
+Likely reload cause: deleting wg 0 clears the hub's session state; clients need
+new handshakes. The 15-16 s observations fit WireGuard's recovery timers. We did
+not capture handshake packets to confirm that explanation.
+Protocol reference: https://www.wireguard.com/protocol/
+
+Test scope
+Measured: three WireGuard sites, one NetBird client/server pair for timing, and
+an additional disposable client for enrollment/revocation. Larger counts are
+analysis in scaling-table.csv. Further work includes throughput, host reboot,
+fresh NetBird server enrollment and human-account disabling.
+
+Evidence map (paths from bundle-d)
+- data/evaluation/: raw HTTP samples, summaries and recorded test outcomes.
+- evidence/evaluation.jsonl: commands/output for removal, reload and HTTP trials.
+- evidence/enrollment-*.jsonl: fresh NetBird setup/access commands.
+- evidence/device-revocation.jsonl: baseline, deletion probes and restored checks.
+- evidence/dashboard-action.json: dashboard-action timestamp bracket.
+- results/: graph and comparison/scaling PDF.
+- private/original-results/: local original logs, trial JSONs and screenshots.
+
+Final organization check
+Five relocated Python tests passed. Both Compose files and shell syntax passed.
+The relocated measurement script collected 60/60 HTTP 200 responses in a new
+folder. These extra script-check samples are in data/measurement-check.csv;
+the main timing table uses the earlier data/evaluation/ run.
