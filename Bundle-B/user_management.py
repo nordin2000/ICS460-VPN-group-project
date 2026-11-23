@@ -39,6 +39,7 @@ def connect(endpoint):
         print("Could not read the API response.")
         return None
 
+
 def load_config():
     try:
         with open("user_config.json", "r") as file:
@@ -52,6 +53,7 @@ def load_config():
         print("There is an error in user_config.json.")
         return None
 
+
 def get_users():
     return connect("/users")
 
@@ -64,7 +66,7 @@ def get_peers():
     return connect("/peers")
 
 
-def get_museum_role(user, peers, config):
+def resolve_role_from_groups(groups, config):
     group_ids = {
         "Staff": config["groups"]["staff"]["peer_group_id"],
         "Volunteers": config["groups"]["volunteers"]["peer_group_id"]
@@ -72,29 +74,12 @@ def get_museum_role(user, peers, config):
 
     assigned_groups = set()
 
-    user_groups = user.get("auto_groups", [])
-
-    for group in user_groups:
+    for group in groups:
         group_id = group.get("id") if isinstance(group, dict) else group
 
         for role, configured_id in group_ids.items():
             if group_id == configured_id:
                 assigned_groups.add(role)
-
-    user_id = user.get("id")
-
-    for peer in peers:
-        if peer.get("user_id") != user_id:
-            continue
-
-        peer_groups = peer.get("groups", [])
-
-        for group in peer_groups:
-            group_id = group.get("id") if isinstance(group, dict) else group
-
-            for role, configured_id in group_ids.items():
-                if group_id == configured_id:
-                    assigned_groups.add(role)
 
     if len(assigned_groups) == 1:
         return assigned_groups.pop()
@@ -103,6 +88,18 @@ def get_museum_role(user, peers, config):
         return "Multiple groups: " + ", ".join(sorted(assigned_groups))
 
     return "Not assigned"
+
+
+def get_museum_role(user, peers, config):
+    combined_groups = list(user.get("auto_groups", []))
+    user_id = user.get("id")
+
+    for peer in peers:
+        if peer.get("user_id") == user_id:
+            combined_groups.extend(peer.get("groups", []))
+
+    return resolve_role_from_groups(combined_groups, config)
+
 
 def list_users():
     users = get_users()
@@ -131,6 +128,7 @@ def list_users():
         print("Museum Role:", museum_role)
         print("Account Status:", user.get("status", "N/A"))
         print("Blocked:", user.get("is_blocked", "N/A"))
+
 
 def view_groups():
     groups = get_groups()
@@ -272,13 +270,55 @@ def check_user_access():
         else:
             print("Could not retrieve accessible peers.")
 
+
+def list_peers():
+    peers = get_peers()
+    config = load_config()
+
+    if not isinstance(peers, list):
+        print("Could not retrieve devices.")
+        return
+
+    if config is None:
+        return
+
+    print("\n===== Museum VPN Devices / Test Peers =====")
+
+    for peer in peers:
+        role = resolve_role_from_groups(peer.get("groups", []), config)
+        if role == "Not assigned":
+            role = "Blocked / No Role"
+
+        peer_id = peer.get("id")
+        accessible = (
+            connect("/peers/" + quote(peer_id, safe="") + "/accessible-peers")
+            if peer_id else None
+        )
+
+        print("----------------------------")
+        print("Device:", peer.get("name", "Unknown"))
+        print("VPN IP:", peer.get("ip", "N/A"))
+        print("Connected:", peer.get("connected", "N/A"))
+        print("Museum Role:", role)
+        print("Registration:", "Setup Key (No User)" if not peer.get("user_id") else "User Account")
+
+        if isinstance(accessible, list) and accessible:
+            targets = ", ".join(d.get("name", "Unknown") for d in accessible)
+            print("Can Reach:", targets)
+        elif isinstance(accessible, list):
+            print("Can Reach: None (Blocked / Default-Deny)")
+        else:
+            print("Can Reach: Could not retrieve")
+
+
 def main():
     while True:
         print("\n===== Museum VPN User Management =====")
         print("1. List Users")
         print("2. View Groups")
         print("3. Check User Access")
-        print("4. Exit")
+        print("4. List Peers & Test Roles")
+        print("5. Exit")
 
         choice = input("\nChoose an option: ").strip()
 
@@ -292,11 +332,15 @@ def main():
             check_user_access()
 
         elif choice == "4":
+            list_peers()
+
+        elif choice == "5":
             print("Goodbye!")
             break
 
         else:
             print("Invalid choice. Try again.")
+
 
 if __name__ == "__main__":
     main()
