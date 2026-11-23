@@ -45,7 +45,7 @@ Change to that directory using the cd command.
 
 Run the command:
 
-   cd bundle-a
+   cd /mnt/c/Users/<YourUsername>/Downloads/bundle-a
 
 You can check to make sure you're in the right place by listing the files.
 
