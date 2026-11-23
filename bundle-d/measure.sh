@@ -3,8 +3,8 @@
 set -eu
 cd "$(dirname "$0")"
 server_ip=${1:?Usage: sh measure.sh SERVER_NETBIRD_IP}
-mkdir -p private
-output=$(mktemp -d "private/http-$(date -u +%Y%m%dT%H%M%SZ)-XXXXXX")
+mkdir -p runs
+output=$(mktemp -d "runs/http-$(date -u +%Y%m%dT%H%M%SZ)-XXXXXX")
 image=curlimages/curl:8.12.1
 docker image inspect "$image" >/dev/null 2>&1 || docker pull "$image"
 printf 'setup,batch,trial,http_status,seconds,exit_code\n' > "$output/trials.csv"

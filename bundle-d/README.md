@@ -31,14 +31,14 @@ Staff access. Then run:
 sh measure.sh 100.89.247.26
 ```
 
-Use your museum peer's NetBird IP. The script makes a new folder in `private/`
+Use your museum peer's NetBird IP. The script makes a new folder in `runs/`
 with 30 samples per VPN, command errors and connection status around each batch.
 It uses the same pinned curl image in each client's network namespace.
 
 ## Read the numbers
 
 The recorded WireGuard median was 1.178 ms; NetBird was 413.982 ms.
-WireGuard stayed on local Docker networks. NetBird used an internet relay.
+WireGuard stayed on Docker networks on the same host. NetBird used an internet relay.
 These numbers describe those paths. Compare access management and observed
 behavior alongside response time.
 
@@ -46,6 +46,6 @@ The hub-reload trials recovered in about 15-16 seconds. Selective removal kept
 the other sites working across all five trials. NetBird device deletion blocked
 the disposable client; SSO re-enrollment and restoring Staff brought it back.
 
-Screenshots and original verbatim logs are kept locally under `private/`.
-The shared evidence keeps request output, timings and exits, with redacted paths
-and account details. Historical commands describe the folder layout at test time.
+The evidence folder contains recorded commands, request output, timings and exits.
+Identifying details are redacted. Historical commands reflect the layout used
+when the tests ran.

@@ -41,4 +41,4 @@ sample count and failures. Save old trials under their original names.
 Handoff
 Save CSVs and command output. Build tables/graph from the recorded samples.
 Separate tested site counts from scaling analysis. List remaining test scope
-in the results report. Keep original screenshots/logs in local private storage.
+in the results report. Save screenshots and logs with the test records.

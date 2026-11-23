@@ -37,13 +37,7 @@ The measurement command needs both VPN labs running and Staff access.
 
 C includes the same museum page as A so the integrated lab runs from its own
 folder. Both contain the identical small HTML resource. B supplies the team
-policies; C exercises them against a controlled local service. D records the tests.
+policies; C exercises them against a controlled test service. D records the tests.
 
 Imported sources: A `65c8ade`, B `4f27c32`. The original source branches retain
-contribution history. B's extended setup note contains exposed credentials;
-its original is kept in local private materials. Use a fresh private API token
-when running B's monitoring program.
-
-Local course documents, past reports, the checklist and presentation plan are
-organized under `project-materials/`. Original logs/screenshots are in
-`bundle-d/private/`.
+contribution history. Use a fresh API token when running B's monitoring program.

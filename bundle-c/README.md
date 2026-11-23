@@ -3,7 +3,7 @@
 This runs the museum page through WireGuard and NetBird on one laptop.
 Rose supplied the museum page/server design (Bundle A, commit 65c8ade).
 Kanag set up the team NetBird groups and policies (Bundle B).
-Suraz built the VPN connection/removal scripts and local integration.
+Suraz built the VPN connection/removal scripts and Docker integration.
 
 - `lab/`: WireGuard hub, museum server and north/east/west sites.
 - `netbird/`: NetBird museum peer and client.

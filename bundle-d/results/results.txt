@@ -20,12 +20,12 @@ WireGuard
 
 NetBird
 - Staff reached 80/8080. Volunteers reached 80 and timed out on 8080 while the
-  local 8080 service check worked. With no role, both requests failed and the
-  local server stayed healthy. Restoring Staff restored access.
+  server-side 8080 service check worked. With no role, both requests failed and the
+  museum server stayed healthy. Restoring Staff restored access.
 - A new client with empty state enrolled through SSO. Its inherited
   Museum-Server membership was changed to Staff;80/8080 both worked.
 - Deleted only the disposable fresh peer. All 14 post-confirmation requests
-  failed (7 per port). Original-client requests succeeded 26/26; local server
+  failed (7 per port). Original-client requests succeeded 26/26; museum server
   checks succeeded 46/46. The deleted client reported SessionExpired.
 - Re-enrolled through SSO. It received 100.89.230.230 in place of 100.89.230.25.
   Restored Staff and verified 80/8080 plus original-client/server health.
@@ -43,7 +43,7 @@ total time excludes helper startup. The original 20 samples are in data/initial-
 the later 60 are in data/evaluation/http-trials.csv.
 
 All six NetBird status checks around the batches showed the museum peer Relayed
-via streamline-us-sjo 1-0:443. WireGuard stayed local. The large response-time
+via streamline-us-sjo1-0:443. WireGuard stayed on the same Docker host. The large response-time
 difference includes the different network paths.
 
 What we learned
@@ -69,7 +69,6 @@ Evidence map (paths from bundle-d)
 - evidence/device-revocation.jsonl: baseline, deletion probes and restored checks.
 - evidence/dashboard-action.json: dashboard-action timestamp bracket.
 - results/: graph and comparison/scaling PDF.
-- private/original-results/: local original logs, trial JSONs and screenshots.
 
 Final organization check
 Five relocated Python tests passed. Both Compose files and shell syntax passed.

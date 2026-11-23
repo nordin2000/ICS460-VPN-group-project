@@ -1,11 +1,11 @@
 Topic,WireGuard lab,NetBird lab
 Setup,"Museum, hub and north/east/west on Docker.",Museum peer and client on separate Docker networks; team cloud management.
-Path,Client -> local hub -> private museum server.,Client -> museum peer through an internet relay in the timing run.
+Path,Client -> Docker hub -> private museum server.,Client -> museum peer through an internet relay in the timing run.
 Enrollment,"Fresh keys/volumes: before-VPN denial, three-site access, removal and restoration passed.","Fresh client enrolled through SSO, assigned Staff, and reached 80/8080. Existing server enrollment reused."
 Adding access,connect.sh configures all three named sites or one selected site.,SSO enrollment followed by a manual role assignment in the dashboard.
 Access rules,All connected sites reached the museum. North was blocked before VPN.,Staff:80/8080. Volunteers:80 only. No role:neither. The role matrix came from guided tests.
 Removing access,remove.py east updates live and saved hub settings. Five concurrent trials passed.,Group withdrawal passed. Deleting the disposable device blocked 14/14 requests across both ports.
-Other clients,252 control requests succeeded during five removals.,"During device deletion, original client 26/26 and server-local 46/46 succeeded."
+Other clients,252 control requests succeeded during five removals.,"During device deletion, original client 26/26 and server-side 46/46 succeeded."
 Restore access,Repeat removal and east restoration passed five times each.,SSO re-enrollment plus Staff restored both ports; client received a new VPN IP.
 Reload recovery,Three hub reloads kept east revoked. North/west first succeeded 15.4-16.4 s after reload; traffic was interrupted.,Peer deletion/re-enrollment tested. Server-restart recovery remains future work.
 HTTP response time,30/30 HTTP 200. Median 1.178 ms; range 0.455-4.640 ms.,30/30 HTTP 200. Median 413.982 ms; range 408.770-823.080 ms.
