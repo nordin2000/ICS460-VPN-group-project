@@ -8,8 +8,7 @@ This python program supports user management and monitoring users using NetBird 
 How to Run:
 1. Open the terminal and go into Bundle-B directory
 2. Run python user_management.py
-3. Enter private API token when prompted. 
-(nbp_3HovIbgnEmgs6hWbNRgwT2uYkYA1rn1LQkX5)
+3. Enter private API token when prompted.
 4. Select an option from menu.
 5. Exit.
 
@@ -37,15 +36,6 @@ Volunteer Web-Only Policy: `Volunteers --> Museum-Server` (allowed only on confi
 Target Server Requirement: Whichever machine hosts the test web server (`python -m http.server 80`) must already be assigned to **`Museum-Server`** in NetBird Cloud (with `Staff` and `Volunteers` removed from that server peer during testing so its own role does not mess with results).
    Tools Needed: Docker Desktop, Two PowerShell terminals, and Python 3.
 
-    
-      Staff Setup Key:
-      3700AB66-762D-48E6-9C33-88F3BED8336D
-
-      Volunteer Setup Key:
-      9E2A14D1-F3EA-4285-8C1E-2943CF739C3B
-
-      Blocked/Revoked Setup Key:
-      6DBE14B0-1C9A-4D3B-83AA-1C5A22250BAC
 
 **3. Steps to Test:**
 
@@ -56,11 +46,11 @@ Target Server Requirement: Whichever machine hosts the test web server (`python 
 
  2) In a second powershell terminal, start the three testers:
 
-        docker run -d --name staff-test-peer --cap-add=NET_ADMIN -e NB_SETUP_KEY= 3700AB66-762D-48E6-9C33-88F3BED8336D netbirdio/netbird:latest
+        docker run -d --name staff-test-peer --cap-add=NET_ADMIN -e NB_SETUP_KEY= <SETUP-KEY> netbirdio/netbird:latest
 
-        docker run -d --name volunteer-test-peer --cap-add=NET_ADMIN -e NB_SETUP_KEY=9E2A14D1-F3EA-4285-8C1E-2943CF739C3B netbirdio/netbird:latest
+        docker run -d --name volunteer-test-peer --cap-add=NET_ADMIN -e NB_SETUP_KEY= <SETUP-KEY> netbirdio/netbird:latest
 
-        docker run -d --name revoked-test-peer --cap-add=NET_ADMIN -e NB_SETUP_KEY=6DBE14B0-1C9A-4D3B-83AA-1C5A22250BAC netbirdio/netbird:latest
+        docker run -d --name revoked-test-peer --cap-add=NET_ADMIN -e NB_SETUP_KEY= <SETUP-KEY> netbirdio/netbird:latest
 
  3) Run the Staff Access Test using your NetBird machine’s own IP address
 
